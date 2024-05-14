@@ -1,0 +1,40 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Text Extraction</title>
+  </head>
+  <body>
+    <h1>Image Text Extraction</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" required />
+      <button type="submit">Upload Image</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const formData = new FormData();
+          formData.append("image", event.target.elements.image.files[0]);
+
+          try {
+            const response = await fetch("/api/extractText", {
+              method: "POST",
+              body: formData,
+            });
+            const data = await response.json();
+            document.getElementById("result").innerText = data.text;
+          } catch (error) {
+            console.error(error);
+            document.getElementById("result").innerText =
+              "Error occurred while processing the image.";
+          }
+        });
+    </script>
+  </body>
+</html>
